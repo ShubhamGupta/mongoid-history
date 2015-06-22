@@ -4,6 +4,7 @@
 * [#133](https://github.com/aq1018/mongoid-history/pull/133) - Add dynamic attributes tracking (Mongoid::Attributes::Dynamic) - [@minisai](https://github.com/minisai).
 * Your contribution here.
 * Add ability to customize tracker class for each trackable; multiple trackers across the app are now possible.
+* Add automatic support for `RequestStore` gem as drop-in replacement for `Thread.current`
 
 0.4.7 (4/6/2015)
 ----------------

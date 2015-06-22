@@ -318,6 +318,14 @@ class Baz
 end
 ```
 
+**Thread Safety**
+
+Mongoid::History stores the tracking enable/disable flag in `Thread.current`.
+If the [RequestStore](https://github.com/steveklabnik/request_store) gem is installed, Mongoid::History
+will automatically store variables in the `RequestStore.store` instead. RequestStore is recommended
+for threaded web servers like Thin or Puma.
+
+
 For more examples, check out [spec/integration/integration_spec.rb](https://github.com/aq1018/mongoid-history/blob/master/spec/integration/integration_spec.rb).
 
 Contributing to mongoid-history

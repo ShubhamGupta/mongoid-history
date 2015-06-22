@@ -15,14 +15,18 @@ module Mongoid
     mattr_accessor :current_user_method
 
     def self.disable(&_block)
-      Thread.current[GLOBAL_TRACK_HISTORY_FLAG] = false
+      store[GLOBAL_TRACK_HISTORY_FLAG] = false
       yield
     ensure
-      Thread.current[GLOBAL_TRACK_HISTORY_FLAG] = true
+      store[GLOBAL_TRACK_HISTORY_FLAG] = true
     end
 
     def self.enabled?
-      Thread.current[GLOBAL_TRACK_HISTORY_FLAG] != false
+      store[GLOBAL_TRACK_HISTORY_FLAG] != false
+    end
+
+    def self.store
+      defined?(::RequestStore) ? RequestStore.store : Thread.current
     end
   end
 end
