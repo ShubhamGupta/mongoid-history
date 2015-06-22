@@ -40,6 +40,7 @@ describe Mongoid::History::Trackable do
         changes_method: :changes,
         scope: :my_model,
         except: %w(created_at updated_at),
+        tracker_class_name: nil,
         track_create: false,
         track_update: true,
         track_destroy: false }

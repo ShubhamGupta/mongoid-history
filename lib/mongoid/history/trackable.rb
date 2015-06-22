@@ -13,6 +13,7 @@ module Mongoid
             version_field: :version,
             changes_method: :changes,
             scope: scope_name,
+            tracker_class_name: nil,
             track_create: false,
             track_update: true,
             track_destroy: false
@@ -68,11 +69,16 @@ module Mongoid
         def track_history_flag
           "mongoid_history_#{name.underscore}_trackable_enabled".to_sym
         end
+
+        def tracker_class
+          klass = history_trackable_options[:tracker_class_name] || Mongoid::History::tracker_class_name
+          klass.is_a?(Class) ? klass : klass.to_s.classify.constantize
+        end
       end
 
       module MyInstanceMethods
         def history_tracks
-          @history_tracks ||= Mongoid::History.tracker_class.where(scope: related_scope, association_chain: association_hash)
+          @history_tracks ||= self.class.tracker_class.where(scope: related_scope, association_chain: association_hash)
         end
 
         #  undo :from => 1, :to => 5
@@ -283,7 +289,7 @@ module Mongoid
           if track_history_for_action?(action)
             current_version = (send(history_trackable_options[:version_field]) || 0) + 1
             send("#{history_trackable_options[:version_field]}=", current_version)
-            Mongoid::History.tracker_class.create!(history_tracker_attributes(action.to_sym).merge(version: current_version, action: action.to_s, trackable: self))
+            self.class.tracker_class.create!(history_tracker_attributes(action.to_sym).merge(version: current_version, action: action.to_s, trackable: self))
           end
           clear_trackable_memoization
         end
